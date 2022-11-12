@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Product xmlns="urn:com.io7m.rivershark:product:1" Name="com.io7m.example">
+  <Version Major="1" Minor="2" Patch="0"/>
+  <Metadata/>
+  <Dependencies>
+    <JPMSModule Group="com.io7m.junreachable" Name="com.io7m.junreachable.core">
+      <Version Major="1" Minor="2" Patch="0"/>
+    </JPMSModule>
+    <JPMSModule Group="com.io7m.jproperties" Name="com.io7m.jproperties.core">
+      <Version Major="1" Minor="2" Patch="0"/>
+    </JPMSModule>
+    <OSGIBundle Group="com.io7m.anethum" Name="com.io7m.anethum.api">
+      <Version Major="1" Minor="0" Patch="0"/>
+    </OSGIBundle>
+    <SunburstPackage Name="com.io7m.ex0">
+      <Version Major="1" Minor="0" Patch="0"/>
+    </SunburstPackage>
+  </Dependencies>
+</Product>

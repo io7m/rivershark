@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:p="urn:com.io7m.rivershark:product:1"
+        targetNamespace="urn:com.io7m.rivershark:product:1">
+
+  <simpleType name="NameT">
+    <annotation>
+      <documentation>
+        The type of package names. See com.io7m.rivershark.product.RSNames.
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <pattern value="[a-z][a-z0-9_-]*(\.[a-z][a-z0-9_-]*)*"/>
+      <maxLength value="255"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="QualifierT">
+    <annotation>
+      <documentation>
+        The type of package version qualifiers. See com.io7m.verona.core.VersionQualifier.
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <pattern value="[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)*"/>
+      <maxLength value="255"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="HashAlgorithmT">
+    <annotation>
+      <documentation>
+        A hash algorithm.
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="SHA2_256">
+        <annotation>
+          <documentation>
+            256-bit SHA-2.
+          </documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="HashT">
+    <annotation>
+      <documentation>
+        The base 16 representation of a hash value.
+      </documentation>
+    </annotation>
+    <restriction base="string">
+      <pattern value="[A-F0-9]+"/>
+      <maxLength value="255"/>
+    </restriction>
+  </simpleType>
+
+  <element name="Version">
+    <annotation>
+      <documentation>
+        A dependency version.
+      </documentation>
+    </annotation>
+    <complexType>
+      <attribute name="Major"
+                 type="unsignedInt"
+                 use="required"/>
+      <attribute name="Minor"
+                 type="unsignedInt"
+                 use="required"/>
+      <attribute name="Patch"
+                 type="unsignedInt"
+                 use="required"/>
+      <attribute name="Qualifier"
+                 type="p:QualifierT"
+                 use="optional"/>
+    </complexType>
+  </element>
+
+  <element name="Hash">
+    <annotation>
+      <documentation>
+        A hash value.
+      </documentation>
+    </annotation>
+
+    <complexType>
+      <attribute name="Algorithm"
+                 type="p:HashAlgorithmT"
+                 use="required"/>
+      <attribute name="Value"
+                 type="p:HashT"
+                 use="required"/>
+    </complexType>
+  </element>
+
+  <element name="OSGIBundle">
+    <annotation>
+      <documentation>
+        A dependency on an OSGi bundle.
+      </documentation>
+    </annotation>
+
+    <complexType>
+      <sequence>
+        <element ref="p:Version"/>
+        <sequence minOccurs="0"
+                  maxOccurs="1">
+          <element ref="p:Hash"/>
+        </sequence>
+      </sequence>
+      <attribute name="Group"
+                 type="p:NameT"
+                 use="required"/>
+      <attribute name="Name"
+                 type="p:NameT"
+                 use="required"/>
+    </complexType>
+  </element>
+
+  <element name="JPMSModule">
+    <annotation>
+      <documentation>
+        A dependency on a JPMS module.
+      </documentation>
+    </annotation>
+
+    <complexType>
+      <sequence>
+        <element ref="p:Version"/>
+        <sequence minOccurs="0"
+                  maxOccurs="1">
+          <element ref="p:Hash"/>
+        </sequence>
+      </sequence>
+      <attribute name="Group"
+                 type="p:NameT"
+                 use="required"/>
+      <attribute name="Name"
+                 type="p:NameT"
+                 use="required"/>
+    </complexType>
+  </element>
+
+  <element name="SunburstPackage">
+    <annotation>
+      <documentation>
+        A dependency on a Sunburst package.
+      </documentation>
+    </annotation>
+
+    <complexType>
+      <sequence>
+        <element ref="p:Version"/>
+        <sequence minOccurs="0"
+                  maxOccurs="1">
+          <element ref="p:Hash"/>
+        </sequence>
+      </sequence>
+      <attribute name="Name"
+                 type="p:NameT"
+                 use="required"/>
+    </complexType>
+  </element>
+
+  <element name="Dependencies">
+    <annotation>
+      <documentation>
+        The dependencies a product has.
+      </documentation>
+    </annotation>
+
+    <complexType>
+      <sequence minOccurs="0"
+                maxOccurs="unbounded">
+        <choice>
+          <element ref="p:OSGIBundle"/>
+          <element ref="p:JPMSModule"/>
+          <element ref="p:SunburstPackage"/>
+        </choice>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="Meta">
+    <annotation>
+      <documentation>
+        A metadata value.
+      </documentation>
+    </annotation>
+
+    <complexType>
+      <attribute name="Key"
+                 type="string"
+                 use="required"/>
+      <attribute name="Value"
+                 type="string"
+                 use="required"/>
+    </complexType>
+  </element>
+
+  <element name="Metadata">
+    <annotation>
+      <documentation>
+        A set of metadata values.
+      </documentation>
+    </annotation>
+
+    <complexType>
+      <sequence minOccurs="0"
+                maxOccurs="unbounded">
+        <element ref="p:Meta"/>
+      </sequence>
+    </complexType>
+
+    <key name="MetadataKeysUnique">
+      <selector xpath="p:Meta"/>
+      <field xpath="@Key"/>
+    </key>
+  </element>
+
+  <element name="Product">
+    <annotation>
+      <documentation>
+        A definition of a product.
+      </documentation>
+    </annotation>
+
+    <complexType>
+      <sequence>
+        <element ref="p:Version"/>
+        <element ref="p:Metadata"/>
+        <element ref="p:Dependencies"/>
+      </sequence>
+      <attribute name="ID"
+                 type="p:NameT"
+                 use="required"/>
+    </complexType>
+  </element>
+
+</schema>
