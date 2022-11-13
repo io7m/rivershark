@@ -25,6 +25,9 @@
     <module>com.io7m.rivershark.launcher.example</module>
     <module>com.io7m.rivershark.launcher.felix</module>
     <module>com.io7m.rivershark.launcher.main</module>
+    <module>com.io7m.rivershark.maven_plugin</module>
+    <module>com.io7m.rivershark.obrcontrol.api</module>
+    <module>com.io7m.rivershark.obrcontrol</module>
     <module>com.io7m.rivershark.product.xml</module>
     <module>com.io7m.rivershark.product</module>
     <module>com.io7m.rivershark.tests</module>
@@ -281,11 +284,20 @@
         <version>${io7m.maven-api.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.maven.shared</groupId>
+        <artifactId>maven-dependency-tree</artifactId>
+        <version>3.2.0</version>
+      </dependency>
+      <dependency>
         <groupId>com.io7m.verona</groupId>
         <artifactId>com.io7m.verona.core</artifactId>
         <version>${com.io7m.verona.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>biz.aQute.bndlib</artifactId>
+        <version>6.3.1</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.felix</groupId>
         <artifactId>org.apache.felix.framework</artifactId>
@@ -308,7 +320,11 @@
         <classifier>AtomosFelix</classifier>
         <version>8.0.0</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.resource</artifactId>
+        <version>1.0.1</version>
+      </dependency>
       <dependency>
         <groupId>com.soebes.itf.jupiter.extension</groupId>
         <artifactId>itf-jupiter-extension</artifactId>
@@ -323,12 +339,6 @@
         <groupId>net.jqwik</groupId>
         <artifactId>jqwik-api</artifactId>
         <version>${net.jqwik.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.choco-solver</groupId>
-        <artifactId>choco-solver</artifactId>
-        <version>4.10.10</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

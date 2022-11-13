@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.io7m.tests</groupId>
+  <artifactId>tests</artifactId>
+  <version>1.0.0</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.io7m.cedarbridge</groupId>
+      <artifactId>com.io7m.cedarbridge.schema.compiler</artifactId>
+      <version>0.0.10</version>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.calino</groupId>
+      <artifactId>com.io7m.calino.vanilla</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+
+        <!-- Produce jar file with custom manifest -->
+        <execution>
+          <id>default-jar</id>
+          <phase>package</phase>
+          <goals>
+            <goal>jar</goal>
+          </goals>
+          <configuration>
+            <archive>
+              <manifestEntries>
+                <Bundle-SymbolicName>com.io7m.tests</Bundle-SymbolicName>
+                <Bundle-Version>1.0.0</Bundle-Version>
+              </manifestEntries>
+            </archive>
+          </configuration>
+        </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
