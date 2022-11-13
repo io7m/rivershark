@@ -18,7 +18,7 @@ package com.io7m.rivershark.tests;
 
 import com.io7m.rivershark.launcher.api.RSLauncherConfiguration;
 import com.io7m.sunburst.model.SBPackageIdentifier;
-import com.io7m.sunburst.model.SBPackageVersion;
+import com.io7m.verona.core.Version;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,15 +77,15 @@ public final class RSLauncherConfigurationTest
         .addSunburstPackage(
           new SBPackageIdentifier(
             "com.io7m.ex0",
-            new SBPackageVersion(1,0,0,"")))
+            Version.of(1, 0, 0)))
         .addSunburstPackage(
           new SBPackageIdentifier(
             "com.io7m.ex1",
-            new SBPackageVersion(2,0,0,"")))
+            Version.of(2,0,0)))
         .addSunburstPackage(
           new SBPackageIdentifier(
             "com.io7m.ex2",
-            new SBPackageVersion(1,3,1,"")))
+            Version.of(1,3,1)))
         .build();
 
     this.roundTrip(configuration);
