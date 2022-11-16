@@ -103,9 +103,9 @@ public final class RSRepository implements RSRepositoryType
       final var fileLock =
         directory.resolve("index.lock");
       final var fileIndex =
-        directory.resolve("index.xml");
+        directory.resolve("obr.xml");
       final var fileIndexTmp =
-        directory.resolve("index.xml.tmp");
+        directory.resolve("obr.xml.tmp");
       final var fileBundles =
         directory.resolve("bundles");
 

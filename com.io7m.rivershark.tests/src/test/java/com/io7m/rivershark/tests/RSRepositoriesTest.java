@@ -111,7 +111,7 @@ public final class RSRepositoriesTest
     this.repository.install(List.of(file));
 
     assertTrue(
-      Files.exists(this.reposDirectory.resolve("index.xml"))
+      Files.exists(this.reposDirectory.resolve("obr.xml"))
     );
   }
 }

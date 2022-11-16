@@ -74,7 +74,7 @@ public final class RSInstallMojoIT
     assertTrue(
       Files.exists(
         target.resolve("tmp-rivershark-repos")
-          .resolve("index.xml")
+          .resolve("obr.xml")
       )
     );
   }
@@ -144,7 +144,7 @@ public final class RSInstallMojoIT
     assertTrue(
       Files.exists(
         target.resolve("tmp-rivershark-repos")
-          .resolve("index.xml")
+          .resolve("obr.xml")
       )
     );
   }
