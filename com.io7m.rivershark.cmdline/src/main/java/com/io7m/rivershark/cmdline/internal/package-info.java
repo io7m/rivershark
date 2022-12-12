@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,21 +15,10 @@
  */
 
 /**
- * Rivershark application runtime (OBR local repository controller)
+ * Rivershark application runtime (Command-line [internals])
  */
 
-module com.io7m.rivershark.obrcontrol
-{
-  requires static org.osgi.annotation.bundle;
-  requires static org.osgi.annotation.versioning;
+@Version("1.0.0")
+package com.io7m.rivershark.cmdline.internal;
 
-  requires transitive com.io7m.rivershark.obrcontrol.api;
-
-  requires com.io7m.jdeferthrow.core;
-  requires com.io7m.oatfield.api;
-  requires com.io7m.oatfield.vanilla;
-  requires com.io7m.verona.core;
-  requires org.osgi.resource;
-
-  exports com.io7m.rivershark.obrcontrol;
-}
+import org.osgi.annotation.versioning.Version;

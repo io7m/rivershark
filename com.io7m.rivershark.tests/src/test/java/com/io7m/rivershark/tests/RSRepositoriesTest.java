@@ -25,9 +25,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.zip.ZipException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -79,7 +81,9 @@ public final class RSRepositoriesTest
         this.repository.install(List.of(file));
       });
 
-    assertTrue(ex.getMessage().contains("missing osgi.identity"));
+    assertTrue(ex.getCause() instanceof IOException);
+    final var cause = ex.getCause();
+    assertTrue(cause.getCause() instanceof ZipException);
   }
 
   @Test
@@ -95,7 +99,7 @@ public final class RSRepositoriesTest
         this.repository.install(List.of(file));
       });
 
-    assertTrue(ex.getMessage().contains("missing osgi.identity"));
+    assertTrue(ex.getMessage().contains("does not contain a jar manifest"));
   }
 
   @Test

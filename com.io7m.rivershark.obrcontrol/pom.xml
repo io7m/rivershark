@@ -35,14 +35,14 @@
       <artifactId>org.osgi.annotation.versioning</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.resource</artifactId>
-    </dependency>
 
     <dependency>
-      <groupId>biz.aQute.bnd</groupId>
-      <artifactId>biz.aQute.bndlib</artifactId>
+      <groupId>com.io7m.oatfield</groupId>
+      <artifactId>com.io7m.oatfield.api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.oatfield</groupId>
+      <artifactId>com.io7m.oatfield.vanilla</artifactId>
     </dependency>
     <dependency>
       <groupId>com.io7m.jdeferthrow</groupId>

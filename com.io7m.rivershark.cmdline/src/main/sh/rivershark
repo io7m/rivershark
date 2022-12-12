@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ -z "${RIVERSHARK_HOME}" ]
+then
+  echo "RIVERSHARK_HOME is unset" 1>&2
+  exit 1
+fi
+
+exec /usr/bin/env java \
+-p "${RIVERSHARK_HOME}/lib" \
+-m com.io7m.rivershark.cmdline/com.io7m.rivershark.cmdline.Main \
+"$@"

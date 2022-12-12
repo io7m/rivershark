@@ -16,6 +16,8 @@
 
 package com.io7m.rivershark.obrcontrol;
 
+import com.io7m.oatfield.vanilla.OFBundleIndexers;
+import com.io7m.oatfield.vanilla.OFBundleReaders;
 import com.io7m.rivershark.obrcontrol.api.RSRepositoryConfiguration;
 import com.io7m.rivershark.obrcontrol.api.RSRepositoryException;
 import com.io7m.rivershark.obrcontrol.api.RSRepositoryFactoryType;
@@ -30,13 +32,17 @@ import java.util.Objects;
 
 public final class RSRepositories implements RSRepositoryFactoryType
 {
+  private final OFBundleIndexers indexers;
+  private final OFBundleReaders readers;
+
   /**
    * The default repository implementation.
    */
 
   public RSRepositories()
   {
-
+    this.indexers = new OFBundleIndexers();
+    this.readers = new OFBundleReaders();
   }
 
   @Override
@@ -45,6 +51,6 @@ public final class RSRepositories implements RSRepositoryFactoryType
     throws RSRepositoryException
   {
     Objects.requireNonNull(configuration, "configuration");
-    return RSRepository.create(configuration);
+    return RSRepository.create(configuration, this.indexers, this.readers);
   }
 }

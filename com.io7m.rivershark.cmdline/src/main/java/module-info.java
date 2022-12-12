@@ -15,21 +15,21 @@
  */
 
 /**
- * Rivershark application runtime (OBR local repository controller)
+ * Rivershark application runtime (Command-line)
  */
 
-module com.io7m.rivershark.obrcontrol
+open module com.io7m.rivershark.cmdline
 {
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
-  requires transitive com.io7m.rivershark.obrcontrol.api;
+  requires com.io7m.rivershark.obrcontrol;
+  requires com.io7m.rivershark.obrcontrol.api;
 
-  requires com.io7m.jdeferthrow.core;
-  requires com.io7m.oatfield.api;
-  requires com.io7m.oatfield.vanilla;
+  requires com.io7m.claypot.core;
   requires com.io7m.verona.core;
-  requires org.osgi.resource;
+  requires jcommander;
+  requires org.slf4j;
 
-  exports com.io7m.rivershark.obrcontrol;
+  exports com.io7m.rivershark.cmdline;
 }

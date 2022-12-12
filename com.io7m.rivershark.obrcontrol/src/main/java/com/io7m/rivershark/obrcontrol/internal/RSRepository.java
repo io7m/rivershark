@@ -17,16 +17,15 @@
 
 package com.io7m.rivershark.obrcontrol.internal;
 
-import aQute.bnd.osgi.repository.SimpleIndexer;
-import aQute.bnd.osgi.resource.ResourceBuilder;
 import com.io7m.jdeferthrow.core.ExceptionTracker;
+import com.io7m.oatfield.api.OFBundleIndexerConfiguration;
+import com.io7m.oatfield.vanilla.OFBundleIndexers;
+import com.io7m.oatfield.vanilla.OFBundleReaders;
 import com.io7m.rivershark.obrcontrol.api.RSRepositoryConfiguration;
 import com.io7m.rivershark.obrcontrol.api.RSRepositoryException;
 import com.io7m.rivershark.obrcontrol.api.RSRepositoryType;
 import com.io7m.verona.core.Version;
-import com.io7m.verona.core.VersionException;
 import com.io7m.verona.core.VersionParser;
-import org.osgi.resource.Resource;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -55,6 +54,8 @@ public final class RSRepository implements RSRepositoryType
   };
 
   private final RSRepositoryConfiguration configuration;
+  private final OFBundleIndexers indexers;
+  private final OFBundleReaders readers;
   private final Path fileIndex;
   private final Path fileIndexTmp;
   private final Path fileLock;
@@ -63,6 +64,8 @@ public final class RSRepository implements RSRepositoryType
 
   private RSRepository(
     final RSRepositoryConfiguration inConfiguration,
+    final OFBundleIndexers inIndexers,
+    final OFBundleReaders inReaders,
     final Path inFileIndex,
     final Path inFileIndexTmp,
     final Path inFileLock,
@@ -71,6 +74,10 @@ public final class RSRepository implements RSRepositoryType
   {
     this.configuration =
       Objects.requireNonNull(inConfiguration, "configuration");
+    this.indexers =
+      Objects.requireNonNull(inIndexers, "indexers");
+    this.readers =
+      Objects.requireNonNull(inReaders, "readers");
     this.fileIndex =
       Objects.requireNonNull(inFileIndex, "fileIndex");
     this.fileIndexTmp =
@@ -87,6 +94,8 @@ public final class RSRepository implements RSRepositoryType
    * Create a new repository.
    *
    * @param configuration The configuration
+   * @param indexers      The bundle indexers
+   * @param readers The bundle readers
    *
    * @return A repository
    *
@@ -94,14 +103,16 @@ public final class RSRepository implements RSRepositoryType
    */
 
   public static RSRepositoryType create(
-    final RSRepositoryConfiguration configuration)
+    final RSRepositoryConfiguration configuration,
+    final OFBundleIndexers indexers,
+    final OFBundleReaders readers)
     throws RSRepositoryException
   {
     try {
       final var directory =
         configuration.directory();
       final var fileLock =
-        directory.resolve("index.lock");
+        directory.resolve("obr.lock");
       final var fileIndex =
         directory.resolve("obr.xml");
       final var fileIndexTmp =
@@ -109,13 +120,15 @@ public final class RSRepository implements RSRepositoryType
       final var fileBundles =
         directory.resolve("bundles");
 
-      Files.createDirectories(directory);
+      Files.createDirectories(fileBundles);
 
       final var channel =
         FileChannel.open(fileLock, OPTIONS);
 
       return new RSRepository(
         configuration,
+        indexers,
+        readers,
         fileIndex,
         fileIndexTmp,
         fileLock,
@@ -135,7 +148,7 @@ public final class RSRepository implements RSRepositoryType
       .endsWith(".jar");
   }
 
-  private static Map<Path, Identifier> checkBundles(
+  private Map<Path, Identifier> checkBundles(
     final Collection<Path> files)
     throws RSRepositoryException
   {
@@ -146,14 +159,24 @@ public final class RSRepository implements RSRepositoryType
 
     for (final var file : files) {
       try {
-        final var builder = new ResourceBuilder();
-        builder.addFile(file.toFile(), file.toUri());
-        final var resource =
-          builder.build();
-        final var identifier =
-          findIdentity(file, resource);
+        try (var reader = this.readers.createReader(file)) {
+          final var versionOpt = reader.bundleVersion();
+          if (versionOpt.isEmpty()) {
+            throw new RSRepositoryException(
+              String.format(
+                "File '%s' is not an OSGi bundle (missing osgi.identity and/or version)",
+                file)
+            );
+          }
 
-        mapBundles.put(file, identifier);
+          final var identifier =
+            new Identifier(
+              reader.bundleSymbolicName(),
+              VersionParser.parse(versionOpt.get())
+            );
+
+          mapBundles.put(file, identifier);
+        }
       } catch (final Exception e) {
         exceptions.addException(new RSRepositoryException(e.getMessage(), e));
       }
@@ -163,61 +186,6 @@ public final class RSRepository implements RSRepositoryType
     return mapBundles;
   }
 
-  private static Identifier findIdentity(
-    final Path file,
-    final Resource resource)
-    throws RSRepositoryException
-  {
-    final var caps =
-      resource.getCapabilities("osgi.identity");
-
-    String identifier = null;
-    Version version = null;
-
-    for (final var cap : caps) {
-      for (final var entry : cap.getAttributes().entrySet()) {
-        final var name =
-          entry.getKey();
-        final var valText =
-          entry.getValue().toString();
-
-        switch (name) {
-          case "osgi.identity" -> {
-            identifier = valText;
-          }
-          case "version" -> {
-            try {
-              version = VersionParser.parse(valText);
-            } catch (final VersionException e) {
-              throw new RSRepositoryException(
-                String.format(
-                  "File '%s' has unparseable version '%s': %s",
-                  file,
-                  valText,
-                  e.getMessage()
-                ),
-                e
-              );
-            }
-          }
-          default -> {
-
-          }
-        }
-      }
-    }
-
-    if (identifier != null && version != null) {
-      return new Identifier(identifier, version);
-    }
-
-    throw new RSRepositoryException(
-      String.format(
-        "File '%s' is not an OSGi bundle (missing osgi.identity and/or version)",
-        file)
-    );
-  }
-
   @Override
   public void install(
     final Collection<Path> files)
@@ -225,8 +193,13 @@ public final class RSRepository implements RSRepositoryType
   {
     Objects.requireNonNull(files, "files");
 
-    final var checked = checkBundles(files);
+    try {
+      Files.createDirectories(this.fileBundles);
+    } catch (final IOException e) {
+      // Best effort.
+    }
 
+    final var checked = this.checkBundles(files);
     try (var ignored = this.channel.lock()) {
       for (final var entry : checked.entrySet()) {
         this.installBundleFile(entry.getKey(), entry.getValue());
@@ -244,14 +217,20 @@ public final class RSRepository implements RSRepositoryType
     try (var stream = Files.list(this.fileBundles)) {
       final var jars =
         stream.filter(RSRepository::isJarFile)
-          .map(Path::toFile)
+          .map(Path::toAbsolutePath)
           .toList();
 
-      new SimpleIndexer()
-        .name(this.configuration.name())
-        .base(this.configuration.directory().toUri())
-        .files(jars)
-        .index(this.fileIndexTmp.toFile());
+      final var config =
+        new OFBundleIndexerConfiguration(
+          jars,
+          this.fileIndexTmp,
+          this.configuration.directory().toUri(),
+          this.configuration.name()
+        );
+
+      try (var indexer = this.indexers.createIndexer(config)) {
+        indexer.execute();
+      }
 
       Files.move(
         this.fileIndexTmp,
