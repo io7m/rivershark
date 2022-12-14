@@ -30,11 +30,11 @@ import java.util.List;
 import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
 
 /**
- * The "install" command.
+ * The "install-bundles" command.
  */
 
-@Parameters(commandDescription = "Install bundles into an OBR.")
-public final class RSCommandInstall extends CLPAbstractCommand
+@Parameters(commandDescription = "Install OSGi bundles into an OBR.")
+public final class RSCommandInstallBundles extends CLPAbstractCommand
 {
   @Parameter(
     names = "--repository",
@@ -60,7 +60,7 @@ public final class RSCommandInstall extends CLPAbstractCommand
    * @param inContext The command context
    */
 
-  public RSCommandInstall(
+  public RSCommandInstallBundles(
     final CLPCommandContextType inContext)
   {
     super(inContext);
@@ -94,6 +94,6 @@ public final class RSCommandInstall extends CLPAbstractCommand
   @Override
   public String name()
   {
-    return "install";
+    return "install-bundles";
   }
 }

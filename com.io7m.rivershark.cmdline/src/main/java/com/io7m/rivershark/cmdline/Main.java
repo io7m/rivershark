@@ -21,7 +21,7 @@ import com.io7m.claypot.core.CLPCommandConstructorType;
 import com.io7m.claypot.core.CLPCommandType;
 import com.io7m.claypot.core.Claypot;
 import com.io7m.claypot.core.ClaypotType;
-import com.io7m.rivershark.cmdline.internal.RSCommandInstall;
+import com.io7m.rivershark.cmdline.internal.RSCommandInstallBundles;
 import com.io7m.rivershark.cmdline.internal.RSCommandVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public final class Main implements Runnable
     final List<CLPCommandConstructorType> commands =
       List.of(
         RSCommandVersion::new,
-        RSCommandInstall::new
+        RSCommandInstallBundles::new
       );
 
     final var configuration =

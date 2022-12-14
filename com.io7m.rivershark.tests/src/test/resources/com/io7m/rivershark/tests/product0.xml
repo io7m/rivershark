@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Product xmlns="urn:com.io7m.rivershark:product:1" Name="com.io7m.example">
+<Product xmlns="urn:com.io7m.rivershark:product:1" ID="com.io7m.example">
   <Version Major="1" Minor="2" Patch="0"/>
   <Metadata/>
   <Dependencies>

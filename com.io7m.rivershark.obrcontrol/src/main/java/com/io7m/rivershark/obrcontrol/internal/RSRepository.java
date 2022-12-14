@@ -172,7 +172,7 @@ public final class RSRepository implements RSRepositoryType
           final var identifier =
             new Identifier(
               reader.bundleSymbolicName(),
-              VersionParser.parse(versionOpt.get())
+              VersionParser.parseOSGi(versionOpt.get())
             );
 
           mapBundles.put(file, identifier);

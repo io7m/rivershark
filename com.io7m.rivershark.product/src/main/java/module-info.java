@@ -25,6 +25,7 @@ module com.io7m.rivershark.product
 
   requires transitive com.io7m.verona.core;
   requires transitive com.io7m.sunburst.model;
+  requires com.io7m.lanark.core;
 
   exports com.io7m.rivershark.product;
 }

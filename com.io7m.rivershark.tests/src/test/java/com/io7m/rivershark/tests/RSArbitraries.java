@@ -18,6 +18,7 @@
 package com.io7m.rivershark.tests;
 
 import com.io7m.junreachable.UnreachableCodeException;
+import com.io7m.lanark.core.RDottedName;
 import com.io7m.rivershark.product.RSArtifactDependencyJPMS;
 import com.io7m.rivershark.product.RSArtifactDependencyOSGi;
 import com.io7m.rivershark.product.RSArtifactDependencySunburst;
@@ -123,14 +124,8 @@ public final class RSArbitraries implements ArbitraryProvider
 
   private static Arbitrary<String> names()
   {
-    return Arbitraries.strings()
-      .ofMinLength(1)
-      .ofMaxLength(8)
-      .withChars("abcdedfghijklmnopqrstuvwxyz")
-      .list()
-      .ofMinSize(1)
-      .ofMaxSize(8)
-      .map(segments -> String.join(".", segments));
+    return Arbitraries.defaultFor(RDottedName.class)
+      .map(RDottedName::value);
   }
 
   private static Arbitrary<Version> versions()
