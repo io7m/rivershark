@@ -45,7 +45,7 @@
     <com.io7m.trasco.version>0.0.6</com.io7m.trasco.version>
     <com.io7m.verona.version>1.0.0</com.io7m.verona.version>
     <io7m.api.previousVersion>0.0.1-SNAPSHOT</io7m.api.previousVersion>
-    <io7m.maven-api.version>3.9.1</io7m.maven-api.version>
+    <io7m.maven-api.version>3.9.2</io7m.maven-api.version>
     <junit.version>5.9.3</junit.version>
     <net.jqwik.version>1.7.3</net.jqwik.version>
     <org.slf4j.version>2.0.7</org.slf4j.version>
